@@ -419,10 +419,10 @@ static bool emu_step_load_data()
    	  /* 64DD Disk loading */
    	  if (!environ_cb(RETRO_ENVIRONMENT_GET_SYSTEM_DIRECTORY, &dir) || !dir)
          goto load_fail;
-
+#if !defined(VITA)
       /* connect saved_memory.disk to disk */
       g_dd_disk = saved_memory.disk;
-
+#endif
       log_cb(RETRO_LOG_INFO, "EmuThread: M64CMD_DISK_OPEN\n");
       printf("M64CMD_DISK_OPEN\n");
 
@@ -1117,7 +1117,9 @@ static void format_saved_memory(void)
    format_mempak(saved_memory.mempack[1]);
    format_mempak(saved_memory.mempack[2]);
    format_mempak(saved_memory.mempack[3]);
+#if !defined(VITA)
    format_disk(saved_memory.disk);
+#endif
 }
 
 #if defined(HAVE_PARALLEL) || defined(HAVE_OPENGL) || defined(HAVE_OPENGLES)
@@ -1446,8 +1448,12 @@ size_t retro_get_memory_size(unsigned type)
 {
    if (type == RETRO_MEMORY_SAVE_RAM)
    {
+#if !defined(VITA)
       if (g_dd_disk == NULL) return sizeof(saved_memory)-sizeof(saved_memory.disk);
       else return sizeof(saved_memory);
+#else
+      return sizeof(saved_memory);
+#endif
    }
    return NULL;
 }
