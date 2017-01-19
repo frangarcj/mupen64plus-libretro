@@ -39,10 +39,19 @@
 // Thus the local variables are actually global and not on the stack.
 
 extern char *invc_ptr;
-extern char extra_memory[33554432];
+#if   defined(VITA)
+  // for platforms that can't just use .bss buffer, like vita
+  // otherwise better to use the next option for closer branches
+  extern void *base_addr;
+  #define BASE_ADDR ((int)(&base_addr))
 
-#define BASE_ADDR ((int)(&extra_memory))
+#else
+  // using a static buffer in .bss
+  extern char extra_memory[33554432];
+  #define BASE_ADDR ((int)(&extra_memory))
+#endif
+
 //#define TARGET_SIZE_2 24 // 2^24 = 16 megabytes
-#define TARGET_SIZE_2 25 // 2^25 = 32 megabytes
+#define TARGET_SIZE_2 24 // 2^25 = 32 megabytes
 
 #endif /* M64P_R4300_ASSEM_ARM_H */

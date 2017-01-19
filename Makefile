@@ -341,21 +341,24 @@ else ifeq ($(platform), emscripten)
 # PlayStation Vita
 else ifneq (,$(findstring vita,$(platform)))
    TARGET:= $(TARGET_NAME)_libretro_$(platform).a
-   CPUFLAGS += -DNO_ASM  -DARM -D__arm__ -DARM_ASM -D__NEON_OPT
+   CPUFLAGS += -DNO_ASM  -DARM -D__arm__ -DARM_ASM -D__NEON_OPT 
    CPUFLAGS += -w -mthumb -mcpu=cortex-a9 -mfpu=neon -mfloat-abi=hard -D__arm__ -DARM_ASM -D__NEON_OPT -g
    HAVE_NEON = 1
-
+   USE_CXD4_NEW = 1 
+   USE_SSE2NEON = 1 
+   APP_ABI = armeabi-v7a-hard
+   WITH_DYNAREC = arm
    PREFIX = arm-vita-eabi
    CC = $(PREFIX)-gcc
    CXX = $(PREFIX)-g++
    AR  = $(PREFIX)-ar
-   WITH_DYNAREC = arm
+   
    DYNAREC_USED = 0
    GLES = 0
    HAVE_OPENGL = 0
    PLATCFLAGS += -DVITA
    CPUCFLAGS += -DNO_ASM
-   CFLAGS += -DVITA -lm
+   CFLAGS += -DVITA -lm -fno-optimize-sibling-calls -fno-short-enums
    VITA = 1
    SOURCES_C += $(CORE_DIR)/src/r4300/empty_dynarec.c
 

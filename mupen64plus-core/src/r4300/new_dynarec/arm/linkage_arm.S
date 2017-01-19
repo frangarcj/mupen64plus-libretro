@@ -71,7 +71,9 @@
 BSS_SECTION
 
     .align   12
+#ifndef VITA
     GLOBAL_VARIABLE(extra_memory, 33554432)
+#endif
     GLOBAL_VARIABLE(dynarec_local, 64)
     GLOBAL_VARIABLE(next_interupt, 4)
     GLOBAL_VARIABLE(cycle_count, 4)
@@ -103,10 +105,15 @@ BSS_SECTION
     GLOBAL_VARIABLE(restore_candidate, 512)
     GLOBAL_VARIABLE(memory_map, 4194304)
 
+#ifndef VITA
 extra_memory:
     .space    33554432+64+4+4+4+4+4+4+4+4+8+8+4+2+2+4+4+256+8+8+128+128+128+16+4+4+132+4+256+512+4194304
 
     dynarec_local     = extra_memory      + 33554432
+#else
+dynarec_local:
+    .space    64+4+4+4+4+4+4+4+4+8+8+4+2+2+4+4+256+8+8+128+128+128+16+4+4+132+4+256+512+4194304
+#endif
     next_interupt     = dynarec_local     + 64
     cycle_count       = next_interupt     + 4
     last_count        = cycle_count       + 4
